@@ -1,5 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-only WITH GPL-3.0-linking-exception */
 #include "instrument.h"
+#include "pad_harmony.h"
 #include "fm_patch.h"
 #include "version.h"
 #include "fm1_engine_control.h"
@@ -2535,6 +2536,37 @@ controls_done:
                 if (seq_page == 1 || seq_page == 3) { cursor = first + i; step_follow = 0; }
                 else toggle_step(first + i);
             }
+    }
+    /* Glory Pads: initial chord selection test on track 1. */
+    static uint8_t glory_notes[4];
+    static uint8_t glory_active = 0;
+    static uint8_t glory_key = 0;
+    static uint8_t glory_channel = 0;
+    unsigned glory_enabled = (page == OVERVIEW && track == 0 && mode == 0);
+    if (!glory_enabled && glory_active) {
+        for (unsigned i = 0; i < 4; ++i)
+            if (!post((uint8_t)(0x80 + glory_channel), glory_notes[i], 0, 3)) return 0;
+        glory_active = 0;
+    }
+    if (glory_enabled) {
+        for (unsigned key = 0; key < 12; ++key) {
+            if (!(key_down & keys & (1U << key))) continue;
+            unsigned same_key = glory_active && glory_key == key;
+            if (glory_active) {
+                for (unsigned i = 0; i < 4; ++i)
+                    if (!post((uint8_t)(0x80 + glory_channel), glory_notes[i], 0, 3)) return 0;
+                glory_active = 0;
+            }
+            if (!same_key && pad_notes((uint8_t)key, PAD_MAJOR, PAD_TRIAD, glory_notes)) {
+                glory_channel = (uint8_t)groove_midi_input_channel(track);
+                glory_key = (uint8_t)key;
+                for (unsigned i = 0; i < 4; ++i)
+                    if (!post((uint8_t)(0x90 + glory_channel), glory_notes[i], 80, 3)) return 0;
+                glory_active = 1;
+            }
+            break;
+        }
+        keys &= ~((1U << 12) - 1U);
     }
     for (unsigned key = 0; key < 27; ++key) {
         unsigned note = groove_key_note(track, key, octave);
