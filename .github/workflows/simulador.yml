@@ -1,0 +1,23 @@
+name: Construir simulador
+
+on:
+  push:
+    branches: [glory-pads]
+  workflow_dispatch:
+
+jobs:
+  simulador:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar proyecto
+        uses: actions/checkout@v4
+
+      - name: Construir simulador
+        shell: pwsh
+        run: ./tools/Build-Web.ps1 -LocalPreview
+
+      - name: Guardar simulador
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulador-fm1
+          path: build/preview/
