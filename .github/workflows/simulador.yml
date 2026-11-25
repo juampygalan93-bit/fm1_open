@@ -1,23 +1,63 @@
-name: Construir simulador
+name: Construir y publicar simulador
 
 on:
   push:
-    branches: [glory-pads]
+    branches:
+      - glory-pads
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
-  simulador:
+  construir:
     runs-on: windows-latest
+
     steps:
       - name: Descargar proyecto
         uses: actions/checkout@v4
 
       - name: Construir simulador
         shell: pwsh
-        run: ./tools/Build-Web.ps1 -LocalPreview
+        run: |
+          $sourceUrl = "https://github.com/$env:GITHUB_REPOSITORY/archive/$env:GITHUB_SHA.zip"
+          ./tools/Build-Web.ps1 -SourceUrl $sourceUrl
 
-      - name: Guardar simulador
+      - name: Guardar archivos para publicar
         uses: actions/upload-artifact@v4
         with:
-          name: simulador-fm1
+          name: archivos-simulador
           path: build/preview/
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Descargar simulador construido
+        uses: actions/download-artifact@v4
+        with:
+          name: archivos-simulador
+          path: sitio
+
+      - name: Preparar publicación
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: sitio
+
+      - name: Publicar simulador
+        id: deploy
+        uses: actions/deploy-pages@v4
