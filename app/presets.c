@@ -46,7 +46,7 @@ static const struct scene scenes[GROOVE_FACTORY_PROJECTS] = {
     {"DESERT STEP", 108,38,1, 8,7,1,4, 62,2,35,76, {PL(2,LEAD,87,4,3), AC(3,BASS,37,0,0), DR(79), FM(REED,PAD,60,4,0)}},
     {"SOFT CURRENT",88,41,0,10,2,2,4, 62,1,27,76, {FM(SOFT_EP,KEYS,103,4,0), FM(ROUND_BASS,BASS,86,0,0), SA(PERC,65), FM(GUITAR,LEAD,81,3,2)}},
     {"BROKEN GRID", 134,36,1, 6,6,4,4, 46,2,42,70, {AC(2,BASS,38,0,1), FM(ORGAN,STAB,78,2,3), SA(BEAT,82), FM(METAL,LEAD,65,3,4)}},
-    {"SUNRISE POP", 122,43,0, 0,0,5,5, 68,2,32,76, {FM(WARM_PAD,PAD,72,5,0), FM(ROUND_BASS,BASS,91,0,0), PL(0,ARP,75,3,3), SA(BEAT,84), FM(SOFT_LEAD,LEAD,82,3,2)}},
+    {"GLORY AIR",    72,48,0, 0,0,5,1, 88,1,20,82, {FM(WARM_PAD,PAD,65,9,0)}},
     {"MINIMAL ROOM",124,45,1, 4,1,1,3, 46,2,45,72, {AC(1,BASS,39,0,1), DR(89), FM(CLAV,STAB,70,2,4)}},
     {"AFTERGLOW",    68,36,0, 0,0,3,2, 90,1,42,80, {FM(SOFT_EP,KEYS,108,5,1), FM(VIBES,LEAD,90,6,3)}}
 };
@@ -88,7 +88,7 @@ static unsigned bar_minor(const struct scene *s, unsigned bar)
     return quality[s->minor + 2*(s->motif & 1U)][bar];
 }
 static FM1_DSP_DATA const char fm_names[FM1_FM_FACTORY_PROGRAMS][11] = {
-    "NEON KEYS ","ORBIT BELL","SOFT ORGAN","ROUND BASS","WARM AIR  ","WOOD REED ",
+    "NEON KEYS ","ORBIT BELL","SOFT ORGAN","ROUND BASS","GLORY AIR ","WOOD REED ",
     "SOFT EP   ","DRY CLAV  ","FM GUITAR ","MARIMBA   ","VIBES     ","SOFT BRASS",
     "FM STRINGS","SUB BASS  ","METAL HIT ","SOFT LEAD "
 };
@@ -106,7 +106,7 @@ static FM1_DSP_DATA const struct fm_voice voices[FM1_FM_FACTORY_PROGRAMS] = {
     {99,50,28,53,70,0,99,62,0, {{96,1,7,58,3,50,59,0},{82,2,7,48,7,0,68,0},{69,3,7,35,11,0,80,0}}},
     {95,65,45,78,99,99,95,78,0, {{90,1,7,0,1,0,65,0},{87,2,7,0,1,0,65,0},{74,3,7,0,1,0,65,0}}},
     {97,72,46,82,91,84,99,86,0, {{99,1,7,42,1,0,76,32},{74,2,7,32,1,0,82,20},{0,1,7,0,1,0,80,0}}},
-    {53,47,36,52,96,92,49,55,0, {{90,1,5,42,1,0,55,82},{84,1,9,34,2,0,53,76},{73,2,7,27,1,0,52,78}}},
+    {45,47,36,40,96,92,42,43,0, {{86,1,5,30,1,0,55,82},{78,1,9,25,2,0,53,76},{64,2,7,18,1,0,52,78}}},
     {84,61,46,72,94,89,78,77,1, {{95,1,7,61,2,0,63,86},{82,1,8,38,1,0,68,75},{70,3,7,29,1,0,72,60}}},
     {94,49,28,60,86,0,96,64,0, {{98,1,7,44,1,0,60,35},{86,1,8,38,3,0,66,20},{72,2,6,31,1,0,72,0}}},
     {99,75,47,80,42,0,99,83,1, {{96,1,7,67,1,0,82,18},{81,2,7,55,2,0,86,0},{0,1,7,0,1,0,80,0}}},
